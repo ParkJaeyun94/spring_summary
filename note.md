@@ -5,8 +5,8 @@
 
 ### com.fasterxml.jackson.databind
 ```
-Basic data binding (mapping) functionality that allows for reading JSON content into Java Objects (POJOs) and JSON Trees (JsonNode), 
-as well as writing Java Objects and trees as JSON.
+Basic data binding (mapping) functionality that allows for reading JSON content into Java Objects (POJOs) 
+and JSON Trees (JsonNode), as well as writing Java Objects and trees as JSON.
 ```
 - ObjectMapper
 > ObjectMapper provides functionality for reading and writing JSON, either to and from basic POJOs (Plain Old Java Objects), 
@@ -111,6 +111,8 @@ Provides the classes and interfaces for the security framework.
 > Return the contained value, if present, otherwise throw an exception to be created by the provided supplier.
 #
 
+---
+
 ### javax.persistence
 ```
 Java Persistence is the API for the management for persistence and object/relational mapping.
@@ -123,6 +125,41 @@ Java Persistence is the API for the management for persistence and object/relati
 - @PreUpdate
 > Specifies a callback method for the corresponding lifecycle event.
 > This annotation may be applied to methods of an entity class, a mapped superclass, or a callback listener class.
+#
+
+### javax.servlet
+```
+The javax.servlet package contains a number of classes and interfaces 
+that describe and define the contracts between a servlet class and the runtime environment 
+provided for an instance of such a class by a conforming servlet container.
+```
+- FilterChain
+> A FilterChain is an object provided by the servlet container to the developer 
+> giving a view into the invocation chain of a filtered request for a resource.
+
+> [메서드]  
+> **doFilter(ServletRequest request, ServletResponse response)** :
+> Causes the next filter in the chain to be invoked, or if the calling filter is the last filter in the chain, 
+> causes the resource at the end of the chain to be invoked.  
+> _(Return : void)_
+
+- ServletException
+> [Exception]  
+> Defines a general exception a servlet can throw when it encounters difficulty.
+
+### javax.servlet.http
+```
+The javax.servlet.http package contains a number of classes and interfaces 
+that describe and define the contracts between a servlet class running under the HTTP protocol 
+and the runtime environment provided for an instance of such a class by a conforming servlet container.
+```
+- HttpServletRequest
+> [Interface]  
+> Extends the ServletRequest interface to provide request information for HTTP servlets.
+
+- HttpServletResponse
+> [Interface]  
+> Extends the ServletResponse interface to provide HTTP-specific functionality in sending a response.
 #
 
 ---
@@ -152,6 +189,11 @@ Support package for annotation-driven bean configuration.
 - Autowired
 > Marks a constructor, field, setter method, 
 > or config method as to be autowired by Spring's dependency injection facilities.
+
+- @Value
+> Annotation used at the field or method/constructor parameter level 
+> that indicates a default value expression for the annotated element.
+
 #
 
 ---
@@ -209,6 +251,26 @@ This package contains the HttpInputMessage and HttpOutputMessage interfaces.
 #
 
 ---
+### org.springframework.security.authentication
+```
+Core classes and interfaces related to user authentication, which are used throughout Spring Security.
+```
+- UsernamePasswordAuthenticationToken
+> An Authentication implementation that is designed for simple presentation of a username and password.
+
+> [메서드]  
+> void setDetails(Object details) : (상속받은 메서드)
+#
+
+###  org.springframework.security.config.annotation
+-  SecurityConfigurerAdapter
+> A base class for SecurityConfigurer that allows subclasses to only implement the methods they are interested in.
+#
+
+###  org.springframework.security.config.annotation.web
+- AbstractRequestMatcherRegistry\<C>
+> 
+#
 
 ### org.springframework.security.config.annotation.web.builders
 - HttpSecurity
@@ -222,13 +284,26 @@ This package contains the HttpInputMessage and HttpOutputMessage interfaces.
 > **csrf()** : Enables CSRF protection.  
 > **authorizeRequests()** : Use authorizeHttpRequests() instead.  
 > **authorizeHttpRequests()** : Allows restricting access based upon the HttpServletRequest using RequestMatcher implementations.  
-> **sessionManagement()** : Allows configuring of Session Management.
+> **sessionManagement()** : Allows configuring of Session Management.  
+> addFilterBefore() :  !!
+> exceptionHandling() :  !!
 #
 
 ### org.springframework.security.config.annotation.web.configuration
 - @EnableWebSecurity
 > Add this annotation to an @Configuration class to have the Spring Security configuration 
 > defined in any WebSecurityConfigurer or more likely by exposing a SecurityFilterChain bean:
+
+- WebSecurityConfigurerAdapter
+> 
+#
+
+###  org.springframework.security.config.annotation.web.configurers
+- SessionManagementConfigurer
+> 
+
+- ExceptionHandlingConfigurer<H>
+> 
 #
 
 ### org.springframework.security.config.http
@@ -239,6 +314,22 @@ This package contains the HttpInputMessage and HttpOutputMessage interfaces.
 > **IF_REQUIRED** : Spring Security will only create an HttpSession if required  
 > **NEVER** : Spring Security will never create an HttpSession, but will use the HttpSession if it already exists  
 > **STATELESS** : Spring Security will never create an HttpSession and it will never use it to obtain the SecurityContext
+
+- HttpHeaders
+> 
+#
+
+### org.springframework.security.core
+- Authentication
+> 
+
+- AuthenticationException
+> 
+#
+
+### org.springframework.security.core.context
+- SecurityContextHolder
+> 
 #
 
 ### org.springframework.security.crypto.bcrypt
@@ -249,6 +340,19 @@ described in "A Future-Adaptable Password Scheme" by Niels Provos and David Mazi
 
 - BCryptPasswordEncoder
 > Implementation of PasswordEncoder that uses the BCrypt strong hashing function.
+#
+
+### org.springframework.security.web
+- AuthenticationEntryPoint
+> 
+#
+
+### org.springframework.security.web.authentication
+- UsernamePasswordAuthenticationFilter
+>
+
+- WebAuthenticationDetailsSource
+> 
 #
 
 ---
@@ -297,6 +401,9 @@ as well as for binding request parameters to method arguments.
 > Annotation for handling exceptions in specific handler classes
 and / or handler methods.
 
+- @PathVariable
+>
+
 - @RequestBody
 > Annotation indicating a method parameter should be bound to
 the body of  the web request.
@@ -315,6 +422,11 @@ with flexible method signatures.
 - @ResponseBody
 > Annotation that indicates a method return value should be bound to
 the web response body.
+#
+
+### org.springframework.web.filter
+- OncePerRequestFilter
+> 
 #
 
 -------------------- test ---------------------
@@ -357,6 +469,7 @@ Mockito is a mock library for java - see Mockito class for for usage.
 > 
 > **any()** : Matches anything, including nulls and varargs.  
 > This matcher will perform a type check with the given type, thus excluding values.
+> eq : !!
 
 - Mockito
 > [메서드]  
@@ -365,6 +478,7 @@ Mockito is a mock library for java - see Mockito class for for usage.
 > Enables stubbing methods. 
 > Use it when you want the mock to return particular value when particular method is called  
 > Simply put: "When the x method is called then return y".
+> - doThrow : 
 #
 
 ---
@@ -455,5 +569,6 @@ Use MockMvcRequestBuilders to gain access to instances of those implementations.
 > Methods in this class will reuse a MockServletContext that was created by the Spring TestContext Framework.
 
 > [메서드]  
-> post(URI uri) : Create a MockHttpServletRequestBuilder for a POST request.
+> post(URI uri) : Create a MockHttpServletRequestBuilder for a POST request.  
+> put : !!
 #
