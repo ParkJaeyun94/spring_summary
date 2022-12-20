@@ -18,6 +18,8 @@ or to and from a general-purpose JSON Tree Model (JsonNode), as well as related 
 > _(Return : byte[])_
 #
 
+---
+
 ### io.jsonwebtoken
 - Claims
 > [interface]   
@@ -231,6 +233,10 @@ Interfaces and annotations for JPA specific repositories.
 Contains a basic abstraction over client/server-side HTTP. 
 This package contains the HttpInputMessage and HttpOutputMessage interfaces.
 ```
+- HttpHeaders
+> A data structure representing HTTP request or response headers, 
+> mapping String header names to a list of String values, 
+> also offering accessors for common application-level data types.
 
 - HttpStatus
 > [enum] (더 많이 있음)  
@@ -251,6 +257,7 @@ This package contains the HttpInputMessage and HttpOutputMessage interfaces.
 #
 
 ---
+
 ### org.springframework.security.authentication
 ```
 Core classes and interfaces related to user authentication, which are used throughout Spring Security.
@@ -269,7 +276,7 @@ Core classes and interfaces related to user authentication, which are used throu
 
 ###  org.springframework.security.config.annotation.web
 - AbstractRequestMatcherRegistry\<C>
-> 
+> A base class for registering RequestMatcher's.
 #
 
 ### org.springframework.security.config.annotation.web.builders
@@ -285,8 +292,8 @@ Core classes and interfaces related to user authentication, which are used throu
 > **authorizeRequests()** : Use authorizeHttpRequests() instead.  
 > **authorizeHttpRequests()** : Allows restricting access based upon the HttpServletRequest using RequestMatcher implementations.  
 > **sessionManagement()** : Allows configuring of Session Management.  
-> addFilterBefore() :  !!
-> exceptionHandling() :  !!
+> **addFilterBefore()** :  Allows adding a Filter before one of the known Filter classes.  
+> **exceptionHandling()** :  Allows configuring exception handling.
 #
 
 ### org.springframework.security.config.annotation.web.configuration
@@ -295,18 +302,22 @@ Core classes and interfaces related to user authentication, which are used throu
 > defined in any WebSecurityConfigurer or more likely by exposing a SecurityFilterChain bean:
 
 - WebSecurityConfigurerAdapter
-> 
+> [Deprecated]  
+> Provides a convenient base class for creating a WebSecurityConfigurer instance. The implementation allows customization by overriding methods.
 #
 
 ###  org.springframework.security.config.annotation.web.configurers
 - SessionManagementConfigurer
-> 
+> Allows configuring session management.
 
 - ExceptionHandlingConfigurer<H>
-> 
+> Adds exception handling for Spring Security related exceptions to an application.
 #
 
 ### org.springframework.security.config.http
+```
+Parsing of the <http> namespace element.
+```
 - SessionCreationPolicy
 > [enum]  Specifies the various session creation policies for Spring Security.
 > 
@@ -314,22 +325,38 @@ Core classes and interfaces related to user authentication, which are used throu
 > **IF_REQUIRED** : Spring Security will only create an HttpSession if required  
 > **NEVER** : Spring Security will never create an HttpSession, but will use the HttpSession if it already exists  
 > **STATELESS** : Spring Security will never create an HttpSession and it will never use it to obtain the SecurityContext
-
-- HttpHeaders
-> 
 #
 
 ### org.springframework.security.core
+```
+Core classes and interfaces related to user authentication and authorization, 
+as well as the maintenance of a security context.
+```
 - Authentication
-> 
+> Represents the token for an authentication request or for an authenticated principal 
+> once the request has been processed by the AuthenticationManager.
+> authenticate(Authentication) method.
+
+> [메서드]  
+> **getName()** : [Principal 상속 메서드] Returns the name of this principal.  
+> ※ 참고 : Interface Principal?
+> This interface represents the abstract notion of a principal,
+> which can be used to represent any entity, such as an individual, a corporation, and a login id.
 
 - AuthenticationException
-> 
+> Abstract superclass for all exceptions related to an Authentication object being invalid for whatever reason.
 #
 
 ### org.springframework.security.core.context
 - SecurityContextHolder
+> Associates a given SecurityContext with the current execution thread.
+
+> [메서드]  
+> **getContext()** : Obtain the current SecurityContext. _(Return : SecurityContext)_  
 > 
+> ※ 참고: Interface SecurityContext 의 setAuthentication()
+> setAuthentication(Authentication authentication) :
+> Changes the currently authenticated principal, or removes the authentication information.
 #
 
 ### org.springframework.security.crypto.bcrypt
@@ -343,16 +370,35 @@ described in "A Future-Adaptable Password Scheme" by Niels Provos and David Mazi
 #
 
 ### org.springframework.security.web
+```
+Spring Security's web security module.
+```
 - AuthenticationEntryPoint
-> 
+> Used by ExceptionTranslationFilter to commence an authentication scheme.
+
+> [메서드]  
+> **commence(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response, AuthenticationException authException)** :
+> Commences an authentication scheme.
 #
 
 ### org.springframework.security.web.authentication
+
+```
+Authentication processing mechanisms, 
+which respond to the submission of authentication credentials using various protocols
+```
+
 - UsernamePasswordAuthenticationFilter
->
+> Processes an authentication form submission.
 
 - WebAuthenticationDetailsSource
-> 
+> Implementation of AuthenticationDetailsSource which builds the details object 
+> from an HttpServletRequest object, creating a WebAuthenticationDetails.
+
+> [메서드]  
+> **buildDetails(javax.servlet.http.HttpServletRequest context)** : 
+> Called by a class when it wishes a new authentication details instance to be created.  
+> _(Return : WebAuthenticationDetails)_
 #
 
 ---
@@ -398,23 +444,19 @@ as well as for binding request parameters to method arguments.
 > Classes annotated with @ControllerAdvice can be declared explicitly as Spring beans or auto-detected via classpath scanning.
 
 - @ExceptionHandler
-> Annotation for handling exceptions in specific handler classes
-and / or handler methods.
+> Annotation for handling exceptions in specific handler classes and / or handler methods.
 
 - @PathVariable
->
+> Annotation which indicates that a method parameter should be bound to a URI template variable.
 
 - @RequestBody
-> Annotation indicating a method parameter should be bound to
-the body of  the web request.
+> Annotation indicating a method parameter should be bound to the body of  the web request.
 >
 - @RequestMapping
-> Annotation for Mapping web requests onto methods in request handling classes
-with flexible method signatures.
+> Annotation for Mapping web requests onto methods in request handling classes with flexible method signatures.
 
 - @RestController
-> A convenience annotation that is itself annotated with
-@controller and @ResponseBody
+> A convenience annotation that is itself annotated with @controller and @ResponseBody
 
 - @RestControllerAdvice
 > A convenience annotation that is itself annotated with @ControllerAdvice and @ResponseBody.
@@ -425,8 +467,15 @@ the web response body.
 #
 
 ### org.springframework.web.filter
+```
+Provides generic filter base classes allowing for bean-style configuration.
+```
 - OncePerRequestFilter
-> 
+> Filter base class that aims to guarantee a single execution per request dispatch, on any servlet container.
+
+> [메서드]  
+> **doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)** :
+> Same contract as for doFilter, but guaranteed to be just invoked once per request within a single request thread.
 #
 
 -------------------- test ---------------------
@@ -465,20 +514,20 @@ Mockito is a mock library for java - see Mockito class for for usage.
 > Allow flexible verification or stubbing.
 > Mockito extends ArgumentMatchers so to get access to all matchers just import Mockito class statically.
 
-> [메서드]  
-> 
+> [메서드]
 > **any()** : Matches anything, including nulls and varargs.  
-> This matcher will perform a type check with the given type, thus excluding values.
-> eq : !!
+> This matcher will perform a type check with the given type, thus excluding values.  
+> **eq()** : argument that is equal to the given value.
 
 - Mockito
 > [메서드]  
-> - **when(T methodCall)** : Enables stubbing methods.   
+> **when(T methodCall)** : Enables stubbing methods.   
 > (Return : static \<T> OngoingStubbing\<T>)  
 > Enables stubbing methods. 
 > Use it when you want the mock to return particular value when particular method is called  
-> Simply put: "When the x method is called then return y".
-> - doThrow : 
+> Simply put: "When the x method is called then return y".  
+> 
+> **doThrow()** : Use when you want to stub a void method with an exception
 #
 
 ---
@@ -518,6 +567,7 @@ Mockito integration for Spring Boot tests.
 - @WithMockUser
 > When used with WithSecurityContextTestExecutionListener this annotation can be added to a test method 
 > to emulate running with a mocked user.
+#
 
 ---
 
@@ -569,6 +619,6 @@ Use MockMvcRequestBuilders to gain access to instances of those implementations.
 > Methods in this class will reuse a MockServletContext that was created by the Spring TestContext Framework.
 
 > [메서드]  
-> post(URI uri) : Create a MockHttpServletRequestBuilder for a POST request.  
-> put : !!
+> **post(URI uri)** : Create a MockHttpServletRequestBuilder for a POST request.  
+> **put(URI uri)** : Create a MockHttpServletRequestBuilder for a PUT request.
 #
